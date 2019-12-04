@@ -16,7 +16,7 @@ public class FogColor {
         Voidable voidable = (Voidable)world.getDimension();
 
         if (voidable.isVoidFogDisabled(entity, world)) {
-            return 0;
+            return 1;
         }
 
         double brightness = entity.prevY + (entity.y - entity.prevY) * partialTick * world.getDimension().getHorizonShadingRatio();
