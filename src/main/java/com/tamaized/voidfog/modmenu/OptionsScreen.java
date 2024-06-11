@@ -22,6 +22,9 @@ class OptionsScreen extends GameGui {
     private static final Text PARTICLES_MAX = Text.translatable("menu.voidfog.particles.max");
     private static final Text PARTICLES_DEF = Text.translatable("menu.voidfog.particles.default");
 
+    private static final Text DENSITY_MIN = Text.translatable("menu.voidfog.density.min");
+    private static final Text DENSITY_MAX = Text.translatable("menu.voidfog.density.max");
+
     private final ScrollContainer content = new ScrollContainer();
 
     public OptionsScreen(@Nullable Screen parent) {
@@ -55,6 +58,10 @@ class OptionsScreen extends GameGui {
         content.addButton(new Slider(LEFT, row += 10, 0, 10000, config.voidParticleDensity))
             .onChange(config::setParticleDensity)
             .setTextFormat(this::formatValue);
+
+        content.addButton(new Slider(LEFT, row += 30, 0, 100, config.fogDensity))
+            .onChange(config::setFogDensity)
+            .setTextFormat(this::formatFogDensity);
 
         content.addButton(new Slider(LEFT, row += 30, 0, 383, config.maxFogHeight))
             .onChange(config::setFogHeight)
@@ -124,6 +131,20 @@ class OptionsScreen extends GameGui {
         }
 
         return Text.translatable("menu.voidfog.particles", (int)Math.floor(value));
+    }
+
+    private Text formatFogDensity(AbstractSlider<Float> sender) {
+        float value = sender.getValue();
+
+        if (value <= 0) {
+            return DENSITY_MIN;
+        }
+
+        if (value >= 100) {
+            return DENSITY_MAX;
+        }
+
+        return Text.translatable("menu.voidfog.density", (int)Math.floor(value));
     }
 
     private Text formatFogHeight(AbstractSlider<Float> sender) {

@@ -27,6 +27,8 @@ public class Settings {
 
 	public int voidParticleDensity = 1000;
 
+	public int fogDensity = 100;
+
 	public int maxFogHeight = 32;
 
 	public float fadeStartOffset = 15F; //additive to maxFogHeight, not an absolute height.
@@ -50,6 +52,12 @@ public class Settings {
 	public float setFogHeight(float height) {
 		maxFogHeight = (int)height;
 		return maxFogHeight;
+	}
+
+	public float setFogDensity(float density) {
+		density = density > 97 ? 100 : density < 3 ? 0 : density;
+		fogDensity = (int)density;
+		return fogDensity;
 	}
 
 	public float setFadeStart(float value) {
