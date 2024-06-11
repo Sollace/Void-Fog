@@ -2,8 +2,8 @@ package com.tamaized.voidfog;
 
 import com.tamaized.voidfog.api.Voidable;
 
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;

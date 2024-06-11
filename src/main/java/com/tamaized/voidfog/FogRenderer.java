@@ -3,9 +3,9 @@ package com.tamaized.voidfog;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.tamaized.voidfog.api.Voidable;
 
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
