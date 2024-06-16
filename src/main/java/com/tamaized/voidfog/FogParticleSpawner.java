@@ -18,9 +18,8 @@ public class FogParticleSpawner {
     }
 
     public void update(World world, Entity entity, Voidable dimension) {
-        float entityAltitude = dimension.isVoidFogDisabled(entity, world) ? 15F : (float)(entity.getY() - world.getBottomY());
 
-        if (entityAltitude > VoidFog.config.maxFogHeight) {
+        if (FogRenderer.getAltitude(dimension, world, entity) > VoidFog.config.maxFogHeight) {
             return;
         }
 

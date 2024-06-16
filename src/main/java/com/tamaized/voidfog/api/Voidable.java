@@ -33,13 +33,14 @@ public interface Voidable {
 
         if (entity.isSpectator() || (
                    VoidFog.config.disableInCreative
-                && entity instanceof PlayerEntity
-                && ((PlayerEntity)entity).isCreative())) {
+                && entity instanceof PlayerEntity p
+                && p.isCreative())) {
             return false;
         }
 
         return world.isClient
             && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) != 0
+            && world.getDimension().hasSkyLight()
             && !world.getDimension().hasCeiling();
     }
 

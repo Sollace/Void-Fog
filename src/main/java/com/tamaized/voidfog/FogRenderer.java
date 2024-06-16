@@ -79,7 +79,7 @@ public class FogRenderer {
         return entity.getWorld().getLightLevel(LightType.SKY, pos);
     }
 
-    private static double getAltitude(Voidable voidable, World world, Entity entity) {
+    public static double getAltitude(Voidable voidable, World world, Entity entity) {
         entity = getCorrectEntity(entity);
         return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() - world.getBottomY());
     }
