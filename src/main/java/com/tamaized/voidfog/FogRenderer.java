@@ -81,7 +81,7 @@ public class FogRenderer {
 
     public static double getAltitude(Voidable voidable, World world, Entity entity) {
         entity = getCorrectEntity(entity);
-        return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() - world.getBottomY());
+        return voidable.isVoidFogDisabled(entity, world) ? VoidFog.config.maxFogHeight + 1 : (entity.getY() - world.getBottomY());
     }
 
     public static Entity getCorrectEntity(Entity entity) {

@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 public class FogParticleSpawner {
 
     private static final int RADIUS = 16;
+    private static final int PARTICLE_INSET_HEIGHT = 9;
 
     private BlockPos randomPos(Random rand) {
         return new BlockPos(rand.nextInt(RADIUS), rand.nextInt(RADIUS), rand.nextInt(RADIUS));
@@ -19,7 +20,9 @@ public class FogParticleSpawner {
 
     public void update(World world, Entity entity, Voidable dimension) {
 
-        if (FogRenderer.getAltitude(dimension, world, entity) > VoidFog.config.maxFogHeight) {
+        int maxParticleHeight = VoidFog.config.maxFogHeight - PARTICLE_INSET_HEIGHT;
+
+        if (FogRenderer.getAltitude(dimension, world, entity) > maxParticleHeight) {
             return;
         }
 
@@ -33,8 +36,8 @@ public class FogParticleSpawner {
 
             if (state.isAir()
                     && world.getFluidState(pos).isEmpty()
-                    && (pos.getY() - world.getBottomY()) <= VoidFog.config.maxFogHeight
-                    && rand.nextInt(difficultyMultiplier) <= VoidFog.config.maxFogHeight) {
+                    && (pos.getY() - world.getBottomY()) <= maxParticleHeight
+                    && rand.nextInt(difficultyMultiplier) <= maxParticleHeight) {
                 boolean nearBedrock = dimension.isNearBedrock(pos, world);
 
                 world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
