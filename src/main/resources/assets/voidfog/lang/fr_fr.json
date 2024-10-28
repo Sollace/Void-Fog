@@ -1,0 +1,19 @@
+{
+  "menu.voidfog.title": "Options du brouillard du vide",
+  "menu.voidfog.enabled": "Activer le brouillard",
+  "menu.voidfog.creative": "Désactiver en mode Créatif",
+  "menu.voidfog.scale": "Amplifier avec la difficulté",
+  "menu.voidfog.torches": "Cacher dans les zones éclairées",
+  "menu.voidfog.particles.min": "Pas de particules",
+  "menu.voidfog.particles.max": "TOUTES les particules",
+  "menu.voidfog.particles.default": "Particules : Par défaut",
+  "menu.voidfog.particles": "Particules : %d",
+  "menu.voidfog.density.min": "Brouillard doux",
+  "menu.voidfog.density.max": "Brouillard dense",
+  "menu.voidfog.density": "Densité du brouillard : %d",
+  "menu.voidfog.fogheight": "Hauteur de départ du brouillard : %d",
+  "menu.voidfog.bigboi": "Mode Grand Garçon",
+  "menu.voidfog.bigboi.tooltip": "Rend le jeu encore plus effrayant.\r\nEs-tu un grand garçon ?",
+  "menu.voidfog.prettyFog": "Beau brouillard",
+  "menu.voidfog.prettyFog.tooltip": "Active une apparence de brouillard alternative"
+}
