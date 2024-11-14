@@ -35,6 +35,7 @@ reckon {
 }
 
 repositories {
+    mavenLocal()
     maven { name 'modmenu'; url 'https://maven.terraformersmc.com/releases' }
     maven { name 'minelp'; url 'https://repo.minelittlepony-mod.com/maven/snapshot' }
     maven { name 'minelp-release'; url 'https://repo.minelittlepony-mod.com/maven/release' }

@@ -1,12 +1,13 @@
 package com.tamaized.voidfog;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Fog;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -20,10 +21,10 @@ public class FogRenderer {
 
     private float lastFogDistance = 1000;
 
-    public void render(Camera camera,  FogType type, float viewDistance, boolean thickFog, float delta) {
+    public Fog render(Fog fog, Camera camera, FogType type, float viewDistance, boolean thickFog, float tickDelta) {
 
         if (!canRenderDepthFog(camera)) {
-            return;
+            return fog;
         }
 
         Entity entity = camera.getFocusedEntity();
@@ -31,49 +32,53 @@ public class FogRenderer {
         Voidable voidable = Voidable.of(world);
 
         if (!voidable.hasDepthFog(entity, world)) {
-            return;
+            return fog;
         }
 
         float distance = getFogDistance(world, entity);
 
         if (entity instanceof LivingEntity l && l.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
-            distance *= 4 * GameRenderer.getNightVisionStrength(l, delta);
+            distance *= 4 * GameRenderer.getNightVisionStrength(l, tickDelta);
         }
 
-        distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 10), lastFogDistance, distance);
+        distance = MathHelper.lerp(tickDelta / (distance > lastFogDistance ? 20 : 10), lastFogDistance, distance);
         lastFogDistance = distance;
 
         float blendDelta = getFogBlendingDelta(entity);
-        float density = MathHelper.clamp(VoidFog.config.fogDensity / 100F, 0, 1);
+        float density = MathHelper.clamp(VoidFog.config.fogDensity.get() / 100F, 0, 1);
 
-        RenderSystem.setShaderFogStart(MathHelper.lerp(blendDelta, getFogStart(distance, density, type, world, thickFog), RenderSystem.getShaderFogStart()));
-        RenderSystem.setShaderFogEnd(MathHelper.lerp(blendDelta, getFogEnd(distance, density, type, world, thickFog), RenderSystem.getShaderFogEnd()));
+        float darkenAmount = VoidFog.FOG_COLOR.getFogBrightness((ClientWorld)world, camera.getFocusedEntity(), tickDelta);
+
+        float start = MathHelper.lerp(blendDelta, getFogStart(distance, density, type, world, thickFog), fog.start());
+        float end = MathHelper.lerp(blendDelta, getFogEnd(distance, density, type, world, thickFog), fog.end());
+
+        return new Fog(start, end, fog.shape(), fog.red() * darkenAmount, fog.green() * darkenAmount, fog.blue() * darkenAmount, fog.alpha());
     }
 
     private boolean canRenderDepthFog(Camera camera) {
-        return VoidFog.config.enabled
+        return VoidFog.config.enabled.get()
                 && camera.getSubmersionType() == CameraSubmersionType.NONE
                 && !(camera.getFocusedEntity() instanceof LivingEntity l && l.hasStatusEffect(StatusEffects.BLINDNESS));
     }
 
     public static float getFogBlendingDelta(Entity entity) {
-        if (VoidFog.config.prettyFog) {
+        if (VoidFog.config.prettyFog.get()) {
             return 0;
         }
         float entityAltitude = (float)getAltitude(Voidable.of(entity.getWorld()), entity.getWorld(), entity);
-        float fogHeight = VoidFog.config.fadeStartOffset;
-        float maxFogAltitude = VoidFog.config.maxFogHeight - fogHeight;
-        return MathHelper.clamp((entityAltitude - maxFogAltitude) / fogHeight, 0, 1);
+        float fogTransitionDistance = Math.max(0, VoidFog.config.fogTransitionDistance.get());
+        float maxFogAltitude = VoidFog.config.maxFogHeight.get() - fogTransitionDistance;
+        return MathHelper.clamp((entityAltitude - maxFogAltitude) / fogTransitionDistance, 0, 1);
     }
 
     public static float getDifficultyMultiplier(World world) {
-        return (VoidFog.config.scaleWithDifficulty ? world.getDifficulty().getId() + 1 : 1);
+        return (VoidFog.config.scaleWithDifficulty.get() ? world.getDifficulty().getId() + 1 : 1);
     }
 
     public static int getLight(Entity entity) {
         entity = getCorrectEntity(entity);
         BlockPos pos = BlockPos.ofFloored(entity.getEyePos());
-        if (VoidFog.config.respectTorches) {
+        if (VoidFog.config.respectTorches.get()) {
             return entity.getWorld().getLightLevel(pos);
         }
         return entity.getWorld().getLightLevel(LightType.SKY, pos);
@@ -81,7 +86,7 @@ public class FogRenderer {
 
     public static double getAltitude(Voidable voidable, World world, Entity entity) {
         entity = getCorrectEntity(entity);
-        return voidable.isVoidFogDisabled(entity, world) ? VoidFog.config.maxFogHeight + 1 : (entity.getY() - world.getBottomY());
+        return voidable.isVoidFogDisabled(entity, world) ? VoidFog.config.maxFogHeight.get() + 1 : (entity.getY() - world.getBottomY());
     }
 
     public static Entity getCorrectEntity(Entity entity) {
@@ -96,7 +101,7 @@ public class FogRenderer {
 
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
         double fogDistance = getLight(entity) / 16D
-                           + getAltitude(voidable, world, entity) / (VoidFog.config.maxFogHeight * getDifficultyMultiplier(world));
+                           + getAltitude(voidable, world, entity) / (VoidFog.config.maxFogHeight.get() * getDifficultyMultiplier(world));
 
         if (fogDistance >= 1) {
             return viewDistance;

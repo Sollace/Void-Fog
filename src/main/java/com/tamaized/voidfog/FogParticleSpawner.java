@@ -20,13 +20,13 @@ public class FogParticleSpawner {
 
     public void update(World world, Entity entity, Voidable dimension) {
 
-        int maxParticleHeight = VoidFog.config.maxFogHeight - PARTICLE_INSET_HEIGHT;
+        int maxParticleHeight = VoidFog.config.maxFogHeight.get() - PARTICLE_INSET_HEIGHT;
 
         if (FogRenderer.getAltitude(dimension, world, entity) > maxParticleHeight) {
             return;
         }
 
-        int particleCount = (int)(VoidFog.config.voidParticleDensity * (1 - FogRenderer.getFogBlendingDelta(entity)));
+        int particleCount = (int)(VoidFog.config.voidParticleDensity.get() * (1 - FogRenderer.getFogBlendingDelta(entity)));
         int difficultyMultiplier = (int)(8 * FogRenderer.getDifficultyMultiplier(world));
         Random rand = world.getRandom();
 

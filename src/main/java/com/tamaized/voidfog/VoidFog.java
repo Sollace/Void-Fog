@@ -20,16 +20,16 @@ public class VoidFog implements ClientModInitializer {
 	public static final FogRenderer RENDERER = new FogRenderer();
 	public static final InsanityEngine INSANITY = new InsanityEngine();
 
-	public static Settings config = new Settings();
+	public static Settings config;
 
     @Override
     public void onInitializeClient() {
-        config = Settings.load(GamePaths.getConfigDirectory().resolve("voidfog.json"));
+        config = new Settings(GamePaths.getConfigDirectory().resolve("voidfog.json"));
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
     }
 
     private void onTick(MinecraftClient client) {
-        if (!config.enabled || client.isPaused() || client.world == null || client.getCameraEntity() == null) {
+        if (!config.enabled.get() || client.isPaused() || client.world == null || client.getCameraEntity() == null) {
             return;
         }
 
@@ -43,7 +43,7 @@ public class VoidFog implements ClientModInitializer {
 
         PARTICLE_SPAWNER.update(client.world, entity, dimension);
 
-        if (config.imABigBoi) {
+        if (config.imABigBoi.get()) {
             INSANITY.update(client.world, entity, dimension);
         }
     }

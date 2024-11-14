@@ -32,7 +32,7 @@ public interface Voidable {
     default boolean hasDepthFog(Entity entity, World world) {
 
         if (entity.isSpectator() || (
-                   VoidFog.config.disableInCreative
+                   VoidFog.config.disableInCreative.get()
                 && entity instanceof PlayerEntity p
                 && p.isCreative())) {
             return false;

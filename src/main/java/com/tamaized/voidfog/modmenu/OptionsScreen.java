@@ -22,6 +22,8 @@ class OptionsScreen extends GameGui {
     private static final Text PARTICLES_MAX = Text.translatable("menu.voidfog.particles.max");
     private static final Text PARTICLES_DEF = Text.translatable("menu.voidfog.particles.default");
 
+    private static final Text FOG_HEIGHT_DEFAULT = Text.translatable("menu.voidfog.fog_height.default");
+
     private static final Text DENSITY_MIN = Text.translatable("menu.voidfog.density.min");
     private static final Text DENSITY_MAX = Text.translatable("menu.voidfog.density.max");
 
@@ -68,33 +70,35 @@ class OptionsScreen extends GameGui {
             .setTextFormat(this::formatFogHeight);
 
         content.addButton(new Toggle(LEFT, row += 30, config.enabled))
-            .onChange(enabled -> config.enabled = enabled)
+            .onChange(config.enabled)
             .getStyle()
                 .setText("menu.voidfog.enabled");
 
         content.addButton(new Toggle(LEFT, row += 25, config.prettyFog))
-                .onChange(enabled -> config.prettyFog = enabled)
+                .onChange(config.prettyFog)
                 .getStyle()
                     .setTooltip("menu.voidfog.prettyFog.tooltip")
                     .setText("menu.voidfog.prettyFog");
 
         content.addButton(new Toggle(LEFT, row += 25, config.scaleWithDifficulty))
-            .onChange(enabled -> config.scaleWithDifficulty = enabled)
+            .onChange(config.scaleWithDifficulty)
             .getStyle()
+                .setTooltip("menu.voidfog.scale.tooltip")
                 .setText("menu.voidfog.scale");
 
         content.addButton(new Toggle(LEFT, row += 25, config.disableInCreative))
-            .onChange(enabled -> config.disableInCreative = enabled)
+            .onChange(config.disableInCreative)
             .getStyle()
                 .setText("menu.voidfog.creative");
 
         content.addButton(new Toggle(LEFT, row += 25, config.respectTorches))
-            .onChange(enabled -> config.respectTorches = enabled)
+            .onChange(config.respectTorches)
             .getStyle()
+                .setTooltip("menu.voidfog.torches.tooltip")
                 .setText("menu.voidfog.torches");
 
         content.addButton(new Toggle(LEFT, row += 25, config.imABigBoi))
-            .onChange(enabled -> config.imABigBoi = enabled)
+            .onChange(config.imABigBoi)
             .getStyle()
                 .setTooltip("menu.voidfog.bigboi.tooltip")
                 .setText("menu.voidfog.bigboi");
@@ -148,6 +152,9 @@ class OptionsScreen extends GameGui {
     }
 
     private Text formatFogHeight(AbstractSlider<Float> sender) {
+        if (sender.getValue() == 32) {
+            return FOG_HEIGHT_DEFAULT;
+        }
         return Text.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue()) - 64);
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.LightType;
 public class FogColor {
     private double brightness;
 
-    public double getFogBrightness(ClientWorld world, Entity entity, float delta) {
+    public float getFogBrightness(ClientWorld world, Entity entity, float delta) {
         if (entity.hasVehicle()) {
             entity = entity.getRootVehicle();
         }
@@ -24,12 +24,12 @@ public class FogColor {
 
         double prevBrightness = brightness;
         brightness = computeBrightness(world, entity, delta);
-        return MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
+        return (float)MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
     }
 
     private double computeBrightness(ClientWorld world, Entity entity, float delta) {
 
-        if (!VoidFog.config.enabled) {
+        if (!VoidFog.config.enabled.get()) {
             return 1;
         }
 
