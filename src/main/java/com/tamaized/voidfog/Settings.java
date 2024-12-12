@@ -29,7 +29,7 @@ public class Settings extends Config {
 	        .addComment("Default: 32")
             .addComment("Maximum height in blocks from the bottom of the world that fog will reach.")
 	        .addComment("If scaleWithDifficulty is enabled, this value is MULTIPLIED by the current area's difficulty");
-	public final Setting<Float> fogTransitionDistance = value("maxFogHeight", 15F)
+	public final Setting<Float> fogTransitionDistance = value("fogTransitionDistance", 15F)
             .addComment("Default: 15")
             .addComment("Distance in blocks that you have to approach to the border defined by maxFogHeight for the game to start transitioning from regular to void fog");
 	public final Setting<Boolean> imABigBoi = value("imABigBoi", false)
