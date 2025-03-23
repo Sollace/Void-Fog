@@ -25,6 +25,7 @@ public class VoidFog implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         config = new Settings(GamePaths.getConfigDirectory().resolve("voidfog.json"));
+        config.load();
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
     }
 
