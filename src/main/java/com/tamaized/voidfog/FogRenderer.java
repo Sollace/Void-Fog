@@ -99,7 +99,7 @@ public class FogRenderer {
     private float getFogDistance(World world, Entity entity) {
         Voidable voidable = Voidable.of(world);
 
-        float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
+        float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistanceBlocks();
         double fogDistance = getLight(entity) / 16D
                            + getAltitude(voidable, world, entity) / (VoidFog.config.maxFogHeight.get() * getDifficultyMultiplier(world));
 

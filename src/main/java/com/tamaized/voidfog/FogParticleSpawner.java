@@ -40,7 +40,7 @@ public class FogParticleSpawner {
                     && rand.nextInt(difficultyMultiplier) <= maxParticleHeight) {
                 boolean nearBedrock = dimension.isNearBedrock(pos, world);
 
-                world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
+                world.addParticleClient(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
                         pos.getX() + rand.nextFloat(),
                         pos.getY() + rand.nextFloat(),
                         pos.getZ() + rand.nextFloat(),
