@@ -38,7 +38,6 @@ class OptionsScreen extends GameGui {
         content.getContentPadding().right = 10;
         content.getContentPadding().bottom = 20;
         content.getContentPadding().left = 10;
-
     }
 
     @Override
@@ -108,7 +107,6 @@ class OptionsScreen extends GameGui {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float tickDelta) {
-        renderBackground(context, mouseX, mouseY, tickDelta);
         super.render(context, mouseX, mouseY, tickDelta);
         content.render(context, mouseX, mouseY, tickDelta);
     }

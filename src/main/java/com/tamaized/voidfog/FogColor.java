@@ -3,55 +3,40 @@ package com.tamaized.voidfog;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.block.enums.CameraSubmersionType;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.render.fog.FogData;
+import net.minecraft.client.render.fog.FogModifier;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
 
-public class FogColor {
+public class FogColor extends FogModifier {
     private double brightness;
 
-    public float getFogBrightness(ClientWorld world, Entity entity, float delta) {
-        if (entity.hasVehicle()) {
-            entity = entity.getRootVehicle();
-        }
-
-        if (MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() != CameraSubmersionType.NONE) {
-            return 1;
-        }
-
-        double prevBrightness = brightness;
-        brightness = computeBrightness(world, entity, delta);
-        return (float)MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
+    @Override
+    public boolean isDarknessModifier() {
+        return true;
     }
 
-    private double computeBrightness(ClientWorld world, Entity entity, float delta) {
+    @Override
+    public void applyStartEndModifier(FogData data, Entity cameraEntity, BlockPos cameraPos, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
+    }
 
-        if (!VoidFog.config.enabled.get()) {
-            return 1;
-        }
+    @Override
+    public boolean shouldApply(CameraSubmersionType submersionType, Entity cameraEntity) {
+        return VoidFog.config.enabled.get()
+                && submersionType == CameraSubmersionType.ATMOSPHERIC
+                && Voidable.of(cameraEntity.getWorld()).hasDepthFog(cameraEntity, cameraEntity.getWorld())
+                && !Voidable.of(cameraEntity.getWorld()).isVoidFogDisabled(cameraEntity, cameraEntity.getWorld());
+    }
 
-        Voidable voidable = Voidable.of(world);
-
-        if (voidable.isVoidFogDisabled(entity, world)) {
-            return 1;
-        }
-
-        entity = FogRenderer.getCorrectEntity(entity);
-
-        double yPosition = MathHelper.lerp(delta, entity.lastY, entity.getY());
-        double brightness = yPosition * world.getLevelProperties().getHorizonShadingRatio();
-
-        float light = entity.getWorld().getLightLevel(LightType.SKY, BlockPos.ofFloored(entity.getEyePos())) / 15F;
-
-        brightness *= light;
-
-        if (brightness >= 1) {
-            return 1;
-        }
-
-        return Math.pow(Math.max(0, brightness), 3);
+    @Override
+    public float applyDarknessModifier(LivingEntity cameraEntity, float darkness, float tickProgress) {
+        double prevBrightness = brightness;
+        float light = FogRenderer.getLight(cameraEntity);
+        brightness = light >= 1 ? darkness : (1 - light);
+        return Math.max(darkness, (float)MathHelper.lerp(tickProgress / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness));
     }
 }

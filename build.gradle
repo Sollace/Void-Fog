@@ -27,6 +27,7 @@ archivesBaseName = project.name
 
 loom {
     mixin.defaultRefmapName = 'voidfog.mixin.refmap.json'
+    accessWidenerPath = file('src/main/resources/voidfog.aw')
 }
 
 reckon {

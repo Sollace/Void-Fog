@@ -1,5 +1,7 @@
 package com.tamaized.voidfog;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,7 +11,10 @@ import com.tamaized.voidfog.api.Voidable;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.fog.AtmosphericFogModifier;
 import net.minecraft.entity.Entity;
+
+import static net.minecraft.client.render.fog.FogRenderer.*;
 
 public class VoidFog implements ClientModInitializer {
 
@@ -27,6 +32,15 @@ public class VoidFog implements ClientModInitializer {
         config = new Settings(GamePaths.getConfigDirectory().resolve("voidfog.json"));
         config.load();
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
+
+        FOG_MODIFIERS = new ArrayList<>(FOG_MODIFIERS);
+        var atmospheric = FOG_MODIFIERS.stream().filter(i -> i instanceof AtmosphericFogModifier).toList();
+        if (atmospheric.isEmpty()) {
+            FOG_MODIFIERS.add(RENDERER);
+        } else {
+            FOG_MODIFIERS.add(FOG_MODIFIERS.indexOf(atmospheric.getLast()), RENDERER);
+        }
+        FOG_MODIFIERS.add(FOG_COLOR);
     }
 
     private void onTick(MinecraftClient client) {

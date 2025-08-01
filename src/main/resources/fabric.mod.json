@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "icon": "voidfog_logo.png",
+  "accessWidener": "voidfog.aw",
   "environment": "client",
   "entrypoints": {
     "client": [

@@ -35,7 +35,7 @@ public interface Voidable {
                    VoidFog.config.disableInCreative.get()
                 && entity instanceof PlayerEntity p
                 && p.isCreative())) {
-            return false;
+            //return false;
         }
 
         return world.isClient

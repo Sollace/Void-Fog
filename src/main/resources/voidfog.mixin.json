@@ -5,6 +5,5 @@
     "refmap": "voidfog.mixin.refmap.json",
     "compatibilityLevel": "JAVA_8",
     "client": [
-    	    "MixinBackgroundRenderer"
     ]
 }
