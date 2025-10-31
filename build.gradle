@@ -96,8 +96,6 @@ modrinth {
     }
     dependencies {
        required.project 'P7dR8mSH' // Fabric API
-       required.project '9aNz8Zqn' // Kirin
-       optional.project 'FzE9gshV' // HD Skins
-       optional.project 'h9pJxJR9' // Big Pony
+       embedded.project '9aNz8Zqn' // Kirin
     }
 }
