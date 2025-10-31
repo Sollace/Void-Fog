@@ -35,10 +35,10 @@ public interface Voidable {
                    VoidFog.config.disableInCreative.get()
                 && entity instanceof PlayerEntity p
                 && p.isCreative())) {
-            //return false;
+            return false;
         }
 
-        return world.isClient
+        return world.isClient()
             && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) != 0
             && world.getDimension().hasSkyLight()
             && !world.getDimension().hasCeiling();

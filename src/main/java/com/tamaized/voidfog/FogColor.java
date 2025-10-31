@@ -28,8 +28,8 @@ public class FogColor extends FogModifier {
     public boolean shouldApply(CameraSubmersionType submersionType, Entity cameraEntity) {
         return VoidFog.config.enabled.get()
                 && submersionType == CameraSubmersionType.ATMOSPHERIC
-                && Voidable.of(cameraEntity.getWorld()).hasDepthFog(cameraEntity, cameraEntity.getWorld())
-                && !Voidable.of(cameraEntity.getWorld()).isVoidFogDisabled(cameraEntity, cameraEntity.getWorld());
+                && Voidable.of(cameraEntity.getEntityWorld()).hasDepthFog(cameraEntity, cameraEntity.getEntityWorld())
+                && !Voidable.of(cameraEntity.getEntityWorld()).isVoidFogDisabled(cameraEntity, cameraEntity.getEntityWorld());
     }
 
     @Override

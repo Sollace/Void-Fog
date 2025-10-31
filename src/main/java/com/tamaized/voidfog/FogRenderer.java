@@ -37,7 +37,7 @@ public class FogRenderer extends AtmosphericFogModifier {
         return VoidFog.config.enabled.get()
                 && super.shouldApply(submersionType, cameraEntity)
                 && !(cameraEntity instanceof LivingEntity l && l.hasStatusEffect(StatusEffects.BLINDNESS))
-                && Voidable.of(cameraEntity.getWorld()).hasDepthFog(cameraEntity, cameraEntity.getWorld());
+                && Voidable.of(cameraEntity.getEntityWorld()).hasDepthFog(cameraEntity, cameraEntity.getEntityWorld());
     }
 
     private float getFogDistance(ClientWorld world, Entity cameraEntity, float tickDelta) {
@@ -71,7 +71,7 @@ public class FogRenderer extends AtmosphericFogModifier {
         if (VoidFog.config.prettyFog.get()) {
             return 0;
         }
-        float entityAltitude = (float)getAltitude(Voidable.of(entity.getWorld()), entity.getWorld(), entity);
+        float entityAltitude = (float)getAltitude(Voidable.of(entity.getEntityWorld()), entity.getEntityWorld(), entity);
         float fogTransitionDistance = Math.max(0, VoidFog.config.fogTransitionDistance.get());
         float maxFogAltitude = VoidFog.config.maxFogHeight.get() - fogTransitionDistance;
         return MathHelper.clamp((entityAltitude - maxFogAltitude) / fogTransitionDistance, 0, 1);
@@ -85,9 +85,9 @@ public class FogRenderer extends AtmosphericFogModifier {
         entity = getCorrectEntity(entity);
         BlockPos pos = BlockPos.ofFloored(entity.getEyePos());
         if (VoidFog.config.respectTorches.get()) {
-            return entity.getWorld().getLightLevel(pos);
+            return entity.getEntityWorld().getLightLevel(pos);
         }
-        return entity.getWorld().getLightLevel(LightType.SKY, pos);
+        return entity.getEntityWorld().getLightLevel(LightType.SKY, pos);
     }
 
     public static double getAltitude(Voidable voidable, World world, Entity entity) {
