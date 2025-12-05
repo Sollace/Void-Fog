@@ -3,13 +3,13 @@ package com.tamaized.voidfog;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.block.enums.CameraSubmersionType;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.render.fog.FogModifier;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class FogColor extends FogModifier {
@@ -21,7 +21,7 @@ public class FogColor extends FogModifier {
     }
 
     @Override
-    public void applyStartEndModifier(FogData data, Entity cameraEntity, BlockPos cameraPos, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
+    public void applyStartEndModifier(FogData data, Camera camera, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
     }
 
     @Override

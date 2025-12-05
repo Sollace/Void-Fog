@@ -4,6 +4,7 @@ import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.AtmosphericFogModifier;
@@ -22,10 +23,10 @@ public class FogRenderer extends AtmosphericFogModifier {
     private float lastFogDistance = 1000;
 
     @Override
-    public void applyStartEndModifier(FogData data, Entity cameraEntity, BlockPos cameraPos, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
-        super.applyStartEndModifier(data, cameraEntity, cameraPos, world, viewDistance, tickCounter);
-        float distance = getFogDistance(world, cameraEntity, tickCounter.getDynamicDeltaTicks());
-        float blendDelta = getFogBlendingDelta(cameraEntity);
+    public void applyStartEndModifier(FogData data, Camera camera, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
+        super.applyStartEndModifier(data, camera, world, viewDistance, tickCounter);
+        float distance = getFogDistance(world, camera.getFocusedEntity(), tickCounter.getDynamicDeltaTicks());
+        float blendDelta = getFogBlendingDelta(camera.getFocusedEntity());
         float density = MathHelper.clamp(VoidFog.config.fogDensity.get() / 100F, 0, 1);
 
         data.environmentalStart = MathHelper.lerp(blendDelta, getFogStart(distance, density), data.environmentalStart);
