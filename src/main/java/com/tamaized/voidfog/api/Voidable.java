@@ -38,8 +38,8 @@ public interface Voidable {
             //return false;
         }
 
-        return world.isClient
-            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) != 0
+        return world.isClient()
+            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) > world.getBottomY()
             && world.getDimension().hasSkyLight()
             && !world.getDimension().hasCeiling();
     }
