@@ -39,7 +39,7 @@ public interface Voidable {
         }
 
         return world.isClient()
-            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) != 0
+            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) > world.getBottomY()
             && world.getDimension().hasSkyLight()
             && !world.getDimension().hasCeiling();
     }
