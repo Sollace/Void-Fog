@@ -1,3 +1,3 @@
-accessWidener       v1       named
-accessible          field    net/minecraft/client/render/fog/FogRenderer               FOG_MODIFIERS         Ljava/util/List;
-mutable             field    net/minecraft/client/render/fog/FogRenderer               FOG_MODIFIERS         Ljava/util/List;
+accessWidener       v1       official
+accessible          field    net/minecraft/client/renderer/fog/FogRenderer               FOG_ENVIRONMENTS         Ljava/util/List;
+mutable             field    net/minecraft/client/renderer/fog/FogRenderer               FOG_ENVIRONMENTS         Ljava/util/List;

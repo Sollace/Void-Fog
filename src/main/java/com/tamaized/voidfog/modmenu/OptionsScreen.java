@@ -12,20 +12,20 @@ import com.minelittlepony.common.client.gui.element.Toggle;
 import com.tamaized.voidfog.Settings;
 import com.tamaized.voidfog.VoidFog;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 class OptionsScreen extends GameGui {
-    private static final Text TITLE = Text.translatable("menu.voidfog.title");
-    private static final Text PARTICLES_MIN = Text.translatable("menu.voidfog.particles.min");
-    private static final Text PARTICLES_MAX = Text.translatable("menu.voidfog.particles.max");
-    private static final Text PARTICLES_DEF = Text.translatable("menu.voidfog.particles.default");
+    private static final Component TITLE = Component.translatable("menu.voidfog.title");
+    private static final Component PARTICLES_MIN = Component.translatable("menu.voidfog.particles.min");
+    private static final Component PARTICLES_MAX = Component.translatable("menu.voidfog.particles.max");
+    private static final Component PARTICLES_DEF = Component.translatable("menu.voidfog.particles.default");
 
-    private static final Text FOG_HEIGHT_DEFAULT = Text.translatable("menu.voidfog.fog_height.default");
+    private static final Component FOG_HEIGHT_DEFAULT = Component.translatable("menu.voidfog.fog_height.default");
 
-    private static final Text DENSITY_MIN = Text.translatable("menu.voidfog.density.min");
-    private static final Text DENSITY_MAX = Text.translatable("menu.voidfog.density.max");
+    private static final Component DENSITY_MIN = Component.translatable("menu.voidfog.density.min");
+    private static final Component DENSITY_MAX = Component.translatable("menu.voidfog.density.max");
 
     private final ScrollContainer content = new ScrollContainer();
 
@@ -106,18 +106,18 @@ class OptionsScreen extends GameGui {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float tickDelta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float tickDelta) {
         super.render(context, mouseX, mouseY, tickDelta);
         content.render(context, mouseX, mouseY, tickDelta);
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         VoidFog.config.save();
-        super.close();
+        super.onClose();
     }
 
-    private Text formatValue(AbstractSlider<Float> sender) {
+    private Component formatValue(AbstractSlider<Float> sender) {
         float value = sender.getValue();
 
         if (value <= 0) {
@@ -132,10 +132,10 @@ class OptionsScreen extends GameGui {
             return PARTICLES_DEF;
         }
 
-        return Text.translatable("menu.voidfog.particles", (int)Math.floor(value));
+        return Component.translatable("menu.voidfog.particles", (int)Math.floor(value));
     }
 
-    private Text formatFogDensity(AbstractSlider<Float> sender) {
+    private Component formatFogDensity(AbstractSlider<Float> sender) {
         float value = sender.getValue();
 
         if (value <= 0) {
@@ -146,13 +146,13 @@ class OptionsScreen extends GameGui {
             return DENSITY_MAX;
         }
 
-        return Text.translatable("menu.voidfog.density", (int)Math.floor(value));
+        return Component.translatable("menu.voidfog.density", (int)Math.floor(value));
     }
 
-    private Text formatFogHeight(AbstractSlider<Float> sender) {
+    private Component formatFogHeight(AbstractSlider<Float> sender) {
         if (sender.getValue() == 32) {
             return FOG_HEIGHT_DEFAULT;
         }
-        return Text.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue()) - 64);
+        return Component.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue()) - 64);
     }
 }

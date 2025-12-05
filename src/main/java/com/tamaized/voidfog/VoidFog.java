@@ -10,11 +10,11 @@ import com.tamaized.voidfog.api.Voidable;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.fog.AtmosphericFogModifier;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
+import net.minecraft.world.entity.Entity;
 
-import static net.minecraft.client.render.fog.FogRenderer.*;
+import static net.minecraft.client.renderer.fog.FogRenderer.FOG_ENVIRONMENTS;
 
 public class VoidFog implements ClientModInitializer {
 
@@ -33,33 +33,33 @@ public class VoidFog implements ClientModInitializer {
         config.load();
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
 
-        FOG_MODIFIERS = new ArrayList<>(FOG_MODIFIERS);
-        var atmospheric = FOG_MODIFIERS.stream().filter(i -> i instanceof AtmosphericFogModifier).toList();
+        FOG_ENVIRONMENTS = new ArrayList<>(FOG_ENVIRONMENTS);
+        var atmospheric = FOG_ENVIRONMENTS.stream().filter(i -> i instanceof AtmosphericFogEnvironment).toList();
         if (atmospheric.isEmpty()) {
-            FOG_MODIFIERS.add(RENDERER);
+            FOG_ENVIRONMENTS.add(RENDERER);
         } else {
-            FOG_MODIFIERS.add(FOG_MODIFIERS.indexOf(atmospheric.getLast()), RENDERER);
+            FOG_ENVIRONMENTS.add(FOG_ENVIRONMENTS.indexOf(atmospheric.getLast()), RENDERER);
         }
-        FOG_MODIFIERS.add(FOG_COLOR);
+        FOG_ENVIRONMENTS.add(FOG_COLOR);
     }
 
-    private void onTick(MinecraftClient client) {
-        if (!config.enabled.get() || client.isPaused() || client.world == null || client.getCameraEntity() == null) {
+    private void onTick(Minecraft client) {
+        if (!config.enabled.get() || client.isPaused() || client.level == null || client.getCameraEntity() == null) {
             return;
         }
 
-        Voidable dimension = Voidable.of(client.world);
+        Voidable dimension = Voidable.of(client.level);
 
         Entity entity = client.getCameraEntity();
 
-        if (!dimension.hasDepthFog(entity, client.world)) {
+        if (!dimension.hasDepthFog(entity, client.level)) {
             return;
         }
 
-        PARTICLE_SPAWNER.update(client.world, entity, dimension);
+        PARTICLE_SPAWNER.update(client.level, entity, dimension);
 
         if (config.imABigBoi.get()) {
-            INSANITY.update(client.world, entity, dimension);
+            INSANITY.update(client.level, entity, dimension);
         }
     }
 }

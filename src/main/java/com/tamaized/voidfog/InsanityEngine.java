@@ -2,37 +2,37 @@ package com.tamaized.voidfog;
 
 import com.tamaized.voidfog.api.Voidable;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
 public class InsanityEngine {
     private int timeToNextSound = 0;
     private int insanityBuildUp;
 
     private final Sound[] events = new Sound[] {
-            Sound.of(SoundEvents.ENTITY_POLAR_BEAR_WARNING),
+            Sound.of(SoundEvents.POLAR_BEAR_WARNING),
             Sound.of(SoundEvents.AMBIENT_CAVE),
-            Sound.of(SoundEvents.ENTITY_CREEPER_PRIMED),
-            Sound.of(SoundEvents.ENTITY_ZOMBIE_DESTROY_EGG),
-            Sound.of(SoundEvents.BLOCK_CHEST_CLOSE),
+            Sound.of(SoundEvents.CREEPER_PRIMED),
+            Sound.of(SoundEvents.ZOMBIE_DESTROY_EGG),
+            Sound.of(SoundEvents.CHEST_CLOSE),
             Sound.of(SoundEvents.UI_TOAST_IN),
-            Sound.of(SoundEvents.BLOCK_COMPOSTER_READY),
-            Sound.of(SoundEvents.BLOCK_METAL_STEP),
+            Sound.of(SoundEvents.COMPOSTER_READY),
+            Sound.of(SoundEvents.METAL_STEP),
             Sound.of(SoundEvents.UI_BUTTON_CLICK),
-            Sound.of(SoundEvents.ENTITY_ZOGLIN_ANGRY),
-            Sound.of(SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON),
-            Sound.of(SoundEvents.ENTITY_ZOMBIE_STEP)
+            Sound.of(SoundEvents.ZOGLIN_ANGRY),
+            Sound.of(SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON),
+            Sound.of(SoundEvents.ZOMBIE_STEP)
     };
 
-    public void update(World world, Entity entity, Voidable dimension) {
+    public void update(Level world, Entity entity, Voidable dimension) {
 
-        if (!dimension.hasInsanity(BlockPos.ofFloored(entity.getEyePos()), world)) {
+        if (!dimension.hasInsanity(BlockPos.containing(entity.getEyePosition()), world)) {
             return;
         }
 
@@ -60,18 +60,18 @@ public class InsanityEngine {
                 Math.max(250, 120 + rarity)
         );
 
-        doAScary(world, entity.getBlockPos());
+        doAScary(world, entity.blockPosition());
     }
 
-    private int getRarity(double y, World world) {
+    private int getRarity(double y, Level world) {
         // higher value = lower probability
         // max ---- y -0-- min
-        y -= world.getBottomY();
+        y -= world.getMinY();
         y ++;
         return 1000 * (int)y;
     }
 
-    private void doAScary(World world, BlockPos pos) {
+    private void doAScary(Level world, BlockPos pos) {
         Sound event = events[world.random.nextInt(events.length)];
         float pitch = 1 + world.random.nextFloat();
         event.play(world, pos, 1, pitch);
@@ -80,16 +80,16 @@ public class InsanityEngine {
     interface Sound {
         static Sound of(SoundEvent event) {
             return (world, pos, volume, pitch) -> {
-                world.playSound(MinecraftClient.getInstance().player, pos, event, SoundCategory.AMBIENT, volume, pitch);
+                world.playSound(Minecraft.getInstance().player, pos, event, SoundSource.AMBIENT, volume, pitch);
             };
         }
 
-        static Sound of(RegistryEntry<SoundEvent> event) {
+        static Sound of(Holder<SoundEvent> event) {
             return (world, pos, volume, pitch) -> {
-                world.playSound(MinecraftClient.getInstance().player, pos.getX(), pos.getY(), pos.getZ(), event, SoundCategory.AMBIENT, volume, pitch, world.getRandom().nextLong());
+                world.playSeededSound(Minecraft.getInstance().player, pos.getX(), pos.getY(), pos.getZ(), event, SoundSource.AMBIENT, volume, pitch, world.getRandom().nextLong());
             };
         }
 
-        void play(World world, BlockPos pos, float volume, float pitch);
+        void play(Level world, BlockPos pos, float volume, float pitch);
     }
 }

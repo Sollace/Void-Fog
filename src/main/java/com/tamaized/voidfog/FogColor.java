@@ -1,42 +1,44 @@
 package com.tamaized.voidfog;
 
+import org.jspecify.annotations.Nullable;
+
 import com.tamaized.voidfog.api.Voidable;
 
-import net.minecraft.block.enums.CameraSubmersionType;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.fog.FogData;
-import net.minecraft.client.render.fog.FogModifier;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.client.renderer.fog.environment.FogEnvironment;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.material.FogType;
 
-public class FogColor extends FogModifier {
+public class FogColor extends FogEnvironment {
     private double brightness;
 
     @Override
-    public boolean isDarknessModifier() {
+    public boolean modifiesDarkness() {
         return true;
     }
 
     @Override
-    public void applyStartEndModifier(FogData data, Camera camera, ClientWorld world, float viewDistance, RenderTickCounter tickCounter) {
+    public void setupFog(FogData fog, Camera camera, ClientLevel level, float renderDistance, DeltaTracker deltaTracker) {
     }
 
     @Override
-    public boolean shouldApply(CameraSubmersionType submersionType, Entity cameraEntity) {
+    public boolean isApplicable(@Nullable FogType fogType, Entity cameraEntity) {
         return VoidFog.config.enabled.get()
-                && submersionType == CameraSubmersionType.ATMOSPHERIC
-                && Voidable.of(cameraEntity.getEntityWorld()).hasDepthFog(cameraEntity, cameraEntity.getEntityWorld())
-                && !Voidable.of(cameraEntity.getEntityWorld()).isVoidFogDisabled(cameraEntity, cameraEntity.getEntityWorld());
+                && fogType == FogType.ATMOSPHERIC
+                && Voidable.of(cameraEntity.level()).hasDepthFog(cameraEntity, cameraEntity.level())
+                && !Voidable.of(cameraEntity.level()).isVoidFogDisabled(cameraEntity, cameraEntity.level());
     }
 
     @Override
-    public float applyDarknessModifier(LivingEntity cameraEntity, float darkness, float tickProgress) {
+    public float getModifiedDarkness(LivingEntity cameraEntity, float darkness, float tickProgress) {
         double prevBrightness = brightness;
         float light = FogRenderer.getLight(cameraEntity);
         brightness = light >= 1 ? darkness : (1 - light);
-        return Math.max(darkness, (float)MathHelper.lerp(tickProgress / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness));
+        return Math.max(darkness, (float)Mth.lerp(tickProgress / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness));
     }
 }
