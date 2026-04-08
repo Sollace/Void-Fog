@@ -9,13 +9,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.material.FogType;
 
 public class FogRenderer extends AtmosphericFogEnvironment {
@@ -45,7 +43,7 @@ public class FogRenderer extends AtmosphericFogEnvironment {
         Voidable voidable = Voidable.of(world);
 
         float viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
-        double fogDistance = getLight(cameraEntity) / 16D
+        double fogDistance = Luminance.getLuminance(cameraEntity, VoidFog.config.respectTorches.get()) / 16D
                            + getAltitude(voidable, world, cameraEntity) / (VoidFog.config.maxFogHeight.get() * getDifficultyMultiplier(world));
         float distance = fogDistance >= 1 ? viewDistance : (float)Mth.clamp(100 * Math.pow(Math.max(fogDistance, 0), 2), 5, viewDistance);
 
@@ -80,15 +78,6 @@ public class FogRenderer extends AtmosphericFogEnvironment {
 
     public static float getDifficultyMultiplier(Level world) {
         return (VoidFog.config.scaleWithDifficulty.get() ? world.getDifficulty().getId() + 1 : 1);
-    }
-
-    public static int getLight(Entity entity) {
-        entity = getCorrectEntity(entity);
-        BlockPos pos = BlockPos.containing(entity.getEyePosition());
-        if (VoidFog.config.respectTorches.get()) {
-            return entity.level().getMaxLocalRawBrightness(pos);
-        }
-        return Math.max(0, entity.level().getBrightness(LightLayer.SKY, pos) - entity.level().getSkyDarken());
     }
 
     public static double getAltitude(Voidable voidable, Level world, Entity entity) {

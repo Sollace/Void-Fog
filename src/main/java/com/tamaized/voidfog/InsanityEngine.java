@@ -36,7 +36,7 @@ public class InsanityEngine {
             return;
         }
 
-        float brightness = FogRenderer.getLight(entity);
+        float brightness = Luminance.getLuminance(entity, true);
 
         if (brightness > 0.3F) {
             insanityBuildUp = 0;
