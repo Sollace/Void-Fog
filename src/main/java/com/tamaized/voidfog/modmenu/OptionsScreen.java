@@ -12,7 +12,7 @@ import com.minelittlepony.common.client.gui.element.Toggle;
 import com.tamaized.voidfog.Settings;
 import com.tamaized.voidfog.VoidFog;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -102,13 +102,13 @@ class OptionsScreen extends GameGui {
                 .setTooltip("menu.voidfog.bigboi.tooltip")
                 .setText("menu.voidfog.bigboi");
 
-        addButton(new Button(width / 2 - 100, height - 25).onClick(sender -> finish())).getStyle().setText("gui.done");
+        addButton(new Button(width / 2 - 100, height - 25).onClick(_ -> finish())).getStyle().setText("gui.done");
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float tickDelta) {
-        super.render(context, mouseX, mouseY, tickDelta);
-        content.render(context, mouseX, mouseY, tickDelta);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float tickDelta) {
+        super.extractRenderState(context, mouseX, mouseY, tickDelta);
+        content.extractRenderState(context, mouseX, mouseY, tickDelta);
     }
 
     @Override

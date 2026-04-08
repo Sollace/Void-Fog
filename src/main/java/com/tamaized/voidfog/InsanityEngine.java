@@ -56,7 +56,7 @@ public class InsanityEngine {
             return;
         }
 
-        timeToNextSound = 20 + rarity + world.random.nextInt(
+        timeToNextSound = 20 + rarity + world.getRandom().nextInt(
                 Math.max(250, 120 + rarity)
         );
 
@@ -72,8 +72,8 @@ public class InsanityEngine {
     }
 
     private void doAScary(Level world, BlockPos pos) {
-        Sound event = events[world.random.nextInt(events.length)];
-        float pitch = 1 + world.random.nextFloat();
+        Sound event = events[world.getRandom().nextInt(events.length)];
+        float pitch = 1 + world.getRandom().nextFloat();
         event.play(world, pos, 1, pitch);
     }
 

@@ -44,7 +44,7 @@ public class FogRenderer extends AtmosphericFogEnvironment {
     private float getFogDistance(ClientLevel world, Entity cameraEntity, float tickDelta) {
         Voidable voidable = Voidable.of(world);
 
-        float viewDistance = Minecraft.getInstance().gameRenderer.getRenderDistance();
+        float viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
         double fogDistance = getLight(cameraEntity) / 16D
                            + getAltitude(voidable, world, cameraEntity) / (VoidFog.config.maxFogHeight.get() * getDifficultyMultiplier(world));
         float distance = fogDistance >= 1 ? viewDistance : (float)Mth.clamp(100 * Math.pow(Math.max(fogDistance, 0), 2), 5, viewDistance);
