@@ -48,7 +48,7 @@ public class FogRenderer extends AtmosphericFogEnvironment {
         float distance = fogDistance >= 1 ? viewDistance : (float)Mth.clamp(100 * Math.pow(Math.max(fogDistance, 0), 2), 5, viewDistance);
 
         if (cameraEntity instanceof LivingEntity l && l.hasEffect(MobEffects.NIGHT_VISION)) {
-            distance *= 4 * GameRenderer.getNightVisionScale(l, tickDelta);
+            distance *= 4 * GameRenderer.nightVisionScale(l, tickDelta);
         }
 
         distance = Mth.lerp(tickDelta / (distance > lastFogDistance ? 20 : 10), lastFogDistance, distance);
